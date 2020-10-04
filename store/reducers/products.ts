@@ -1,6 +1,12 @@
 import PRODUCTS from "../../data/dummy-data"
+import Product from "../../model/product";
 
-const initialState = {
+export interface IProductsState {
+    availableProducts: Product[],
+    userProducts: Product[]
+}
+
+const initialState: IProductsState = {
     availableProducts: PRODUCTS,
     userProducts: PRODUCTS.filter(prod => prod.ownerId === "u1"),
 }
