@@ -1,25 +1,32 @@
 import React from "react";
 import {View, Text, FlatList, StyleSheet, Button} from "react-native";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Colors from "../../constants/Colors";
 import CartItem from "../../components/shop/CartItem";
+import * as cartActions from "../../store/actions/cart";
+import cart from "../../store/reducers/cart";
 
 const CartScreen = () => {
     const cartTotalAmount = useSelector((state: any) => state.cart.totalAmount);
+    console.log(`cartTotalAmount ${cartTotalAmount}`)
     const cartItems = useSelector((state: any) => {
         const transformedCartItems = [];
         for (const key in state.cart.items) {
             transformedCartItems.push({
                 productId: key,
-                productTitle: state.cart.items[key].productTitle,
-                productPrice: state.cart.items[key].productPrice,
+                productTitle: state.cart.items[key].title,
+                productPrice: state.cart.items[key].price,
                 quantity: state.cart.items[key].quantity,
                 sum: state.cart.items[key].sum
             })
         }
 
-        return transformedCartItems;
+        return transformedCartItems.sort((a, b) => a.productId > b.productId ? 1 : -1);
         });
+
+        console.log(JSON.stringify( cartItems));
+
+        const dispatch = useDispatch();
 
     return (
         <View style={styles.screen}>
@@ -29,9 +36,12 @@ const CartScreen = () => {
                     title="OrderNow" onPress={() => {}}/>
             </View>
             <FlatList data={cartItems} keyExtractor={item => item.productId} 
-                renderItem={itemData => <CartItem quantity={itemData.item.quantity}
+                renderItem={itemData =>
+                    <CartItem quantity={itemData.item.quantity}
                  title={itemData.item.productTitle} amount={itemData.item.sum}
-                 onRemove={() => {}} />} />
+                 onRemove={() => {
+                    dispatch(cartActions.deleteFromCart(itemData.item.productId));
+                 }} />} />
         </View>
     );
 }

@@ -4,6 +4,9 @@ import { Colors } from "react-native/Libraries/NewAppScreen";
 import { Ionicons } from "@expo/vector-icons";
 
 const CartItem = (props: any) => {
+
+    console.log(JSON.stringify(props));
+
     return (
         <View style={styles.cartItem}>
             <View style={styles.itemData}>
