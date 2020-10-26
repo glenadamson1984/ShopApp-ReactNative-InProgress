@@ -5,6 +5,7 @@ import Colors from "../../constants/Colors";
 import CartItem from "../../components/shop/CartItem";
 import * as cartActions from "../../store/actions/cart";
 import cart from "../../store/reducers/cart";
+import * as ordersActions from "../../store/actions/orders";
 
 const CartScreen = () => {
     const cartTotalAmount = useSelector((state: any) => state.cart.totalAmount);
@@ -33,7 +34,9 @@ const CartScreen = () => {
             <View style={styles.summary}>
                 <Text style={styles.summaryText}>Total: <Text style={styles.amount}>£{cartTotalAmount.toFixed(2)}</Text></Text>
                 <Button color={Colors.accent} disabled={cartItems.length === 0} 
-                    title="OrderNow" onPress={() => {}}/>
+                    title="OrderNow" onPress={() => {
+                        dispatch(ordersActions.addOrder(cartItems, cartTotalAmount))
+                    }}/>
             </View>
             <FlatList data={cartItems} keyExtractor={item => item.productId} 
                 renderItem={itemData =>
