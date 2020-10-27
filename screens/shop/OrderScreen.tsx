@@ -10,7 +10,7 @@ const OrdersScreen = () => {
     const orders = useSelector((state: any) => state.orders.orders);
     return (
         <FlatList data={orders} keyExtractor={item => item.id} 
-    renderItem={(itemData: any) => <OrderItem amount={itemData.item.totalAmount} date={itemData.item.readableDate} />} />
+    renderItem={(itemData: any) => <OrderItem amount={itemData.item.totalAmount} date={itemData.item.readableDate} items={itemData.item.items} />} />
     )
 }
 
