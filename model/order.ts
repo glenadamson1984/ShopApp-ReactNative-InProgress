@@ -1,4 +1,13 @@
-class Order{
+import * as moment from "moment";
+
+export interface IOrder{
+    id: string,
+    items: string[],
+    totalAmount: number,
+    date: Date
+}
+
+class Order implements IOrder{
     id: string;
     items: string[];
     totalAmount: number;
@@ -10,6 +19,10 @@ class Order{
         this.items = items,
         this.totalAmount = totalAmount,
         this.date = date
+    }
+
+    get readableDate() {
+        return moment(this.date).format("MMMM Do YYYY, hh:mm");
     }
 }
 
