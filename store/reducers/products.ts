@@ -1,5 +1,6 @@
 import PRODUCTS from "../../data/dummy-data"
 import Product from "../../model/product";
+import { DELETE_PRODUCT } from "../actions/products";
 
 export interface IProductsState {
     availableProducts: Product[],
@@ -12,5 +13,13 @@ const initialState: IProductsState = {
 }
 
 export default (state = initialState, action: any) => {
+    switch(action.type) {
+        case DELETE_PRODUCT:
+            return {
+                ...state,
+                userProducts: state.userProducts.filter(product => product.id !== action.pid),
+                availableProducts: state.availableProducts.filter(product => product.id !== action.pid)
+            }
+    }
     return state;
 };
