@@ -10,6 +10,7 @@ import Colors from '../constants/Colors';
 import React from 'react';
 import { Ionicons } from "@expo/vector-icons";
 import UserProductScreen from "../screens/user/UserProductScreen";
+import EditProductScreen from "../screens/user/EditProductScreen";
 
 const defaultNavOptions = {
   headerStyle: {
@@ -49,6 +50,7 @@ const OrdersNavigator = createStackNavigator({
 
 const AdminNavigator = createStackNavigator({
   UserProducts: UserProductScreen,
+  EditProduct: EditProductScreen
 }, {
   navigationOptions: {
     drawerIcon: (drawerConfig: any) => <Ionicons name={"ios-create"} size={23} color={drawerConfig.tintColor} />
