@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback} from "react";
-import { View, ScrollView, Text, StyleSheet, TextInput, Platform } from "react-native";
+import { View, ScrollView, Text, StyleSheet, TextInput, Platform, NativeSyntheticEvent, TextInputChangeEventData, Alert, Button } from "react-native";
 import { HeaderButtons, HeaderButton, Item } from "react-navigation-header-buttons";
 import { useSelector, useDispatch } from "react-redux";
 import * as productActions from "../../store/actions/products";
@@ -9,22 +9,43 @@ const EditProductScreen = (props: any) => {
     const editedProduct = useSelector((state: any) => state.products.userProducts.find((prod: any) => prod.id === prodId)); 
     
     const [title, setTitle] = useState(editedProduct ? editedProduct.title : "");
+    const [titleIsValid, setTitleIsValid] = useState(false);
     const [imageUrl, setImageUrl] = useState(editedProduct ? editedProduct.imageUrl : "");
     const [price, setPrice] = useState("");
     const [description, setDescription] = useState(editedProduct ? editedProduct.description : "");
     const dispatch = useDispatch();
 
     const submitHandler = useCallback(() => {
+        if (!titleIsValid) {
+            Alert.alert("wrong input", "please check the form", [{
+                text: "Ok"
+            }]);
+            return;
+        }
+
         if(editedProduct) {
             dispatch(productActions.updateProduct(prodId, title, description, imageUrl));
         } else {
             dispatch(productActions.createProduct(title, description, imageUrl, +price));
         }
-    }, [dispatch, title, imageUrl, description, price, editedProduct]);
+    }, [dispatch, title, imageUrl, description, price, editedProduct, titleIsValid]);
 
     useEffect(() => {
         props.navigation.setParams({submit: submitHandler});
     }, [submitHandler])
+
+    const titleChangeHandler = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
+
+        const text = e.nativeEvent.text;
+        // adding validation
+        if(text.trim().length === 0) {
+            setTitleIsValid(false);
+        } else {
+            setTitleIsValid(true)
+        }
+
+        setTitle(text);
+    }
     
     return (
         <ScrollView>
@@ -33,8 +54,12 @@ const EditProductScreen = (props: any) => {
                     <Text style={styles.label}>Title</Text>
                     <TextInput style={styles.input} 
                         value={title} 
-                        onChange={(text: any) => setTitle(text)}
+                        onChange={titleChangeHandler}
+                        autoCapitalize="sentences"
+                        autoCorrect
+                        returnKeyType="next"
                     />
+                    {!titleIsValid && <Text>Please enter a valid title</Text>}
                 </View>
                 <View style={styles.formControl}>
                     <Text style={styles.label}>ImageUrl</Text>
@@ -48,6 +73,9 @@ const EditProductScreen = (props: any) => {
                     <TextInput style={styles.input}
                         value={price} 
                         onChange={(text: any) => setPrice(text)}
+                        keyboardType="decimal-pad"
+                        onEndEditing={() => {console.log("ended edit");}}
+                        onSubmitEditing={() => {console.log("you clicked return");}}
                     />
                 </View> }
                 <View style={styles.formControl}>
